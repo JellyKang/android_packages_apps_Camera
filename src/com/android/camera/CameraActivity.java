@@ -175,6 +175,8 @@ public class CameraActivity extends ActivityBase
                 case GALLERY_MODULE_INDEX:
                     break;
             }
+	    
+            }
 
         }
     }
