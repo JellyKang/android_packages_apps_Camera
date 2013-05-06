@@ -1,6 +1,7 @@
 /*
  * Copyright (C) 2012 The Android Open Source Project
  * Copyright (c) 2013, Linux Foundation. All rights reserved.
+ * Copyright (c) 2013, The JellyKang Project. All rights reserved.
  *
  * Not a Contribution. Apache license notifications and license are
  * retained for attribution purposes only
