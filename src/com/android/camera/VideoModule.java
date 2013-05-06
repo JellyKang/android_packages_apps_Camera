@@ -780,6 +780,8 @@ public class VideoModule implements CameraModule,
         }
         // TODO: This should be checked instead directly +1000.
         if (mCaptureTimeLapse) quality += 1000;
+	Log.v(TAG, "Fix FCC quality params, your welcome - XMC");
+	if (mCameraId == 1 && quality == 6) quality = CamcorderProfile.QUALITY_HIGH;
         mProfile = CamcorderProfile.get(mCameraId, quality);
         getDesiredPreviewSize();
     }
