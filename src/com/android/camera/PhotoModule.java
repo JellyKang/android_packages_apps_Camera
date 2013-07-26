@@ -167,6 +167,7 @@ public class PhotoModule
     private boolean mAeLockSupported;
     private boolean mAwbLockSupported;
     private boolean mContinousFocusSupported;
+    private boolean mHwFocusCameraKey;
 
     // The degrees of the device rotated clockwise from its natural orientation.
     private int mOrientation = OrientationEventListener.ORIENTATION_UNKNOWN;
@@ -179,7 +180,6 @@ public class PhotoModule
     private boolean mFaceDetectionStarted = false;
 
     private PreviewFrameLayout mPreviewFrameLayout;
-    private Object mSurfaceTexture;
 
     // for API level 10
     private PreviewSurfaceView mPreviewSurfaceView;
@@ -1752,6 +1752,9 @@ public class PhotoModule
                 mActivity.hideSwitcher();
                 mActivity.setSwipingEnabled(false);
             }
+            if (mHwFocusCameraKey) {
+                mFocusManager.onShutterUp();
+            }
             mFocusManager.onShutterDown();
         } else {
             mFocusManager.onShutterUp();
@@ -1920,9 +1923,9 @@ public class PhotoModule
         stopPreview();
         // Close the camera now because other activities may need to use it.
         closeCamera();
-        if (mSurfaceTexture != null) {
+        if (Util.mSurfaceTexture != null) {
             ((CameraScreenNail) mActivity.mCameraScreenNail).releaseSurfaceTexture();
-            mSurfaceTexture = null;
+            Util.mSurfaceTexture = null;
         }
         resetScreenOn();
 
@@ -2186,6 +2189,7 @@ public class PhotoModule
         switch (keyCode) {
             case KeyEvent.KEYCODE_FOCUS:
                 if (mFirstTimeInitialized && event.getRepeatCount() == 0) {
+                    mHwFocusCameraKey = true;
                     onShutterButtonFocus(true);
                 }
                 return true;
@@ -2241,9 +2245,7 @@ public class PhotoModule
         }
         switch (keyCode) {
             case KeyEvent.KEYCODE_FOCUS:
-                if (mFirstTimeInitialized) {
-                    onShutterButtonFocus(false);
-                }
+                mHwFocusCameraKey = false;
                 return true;
             case KeyEvent.KEYCODE_POWER:
                 if (ActivityBase.mPowerShutter) {
@@ -2366,7 +2368,8 @@ public class PhotoModule
                 mSurfaceTexture = screenNail.getSurfaceTexture();
             }
             mCameraDevice.setDisplayOrientation(mCameraDisplayOrientation);
-            mCameraDevice.setPreviewTextureAsync((SurfaceTexture) mSurfaceTexture);
+            mCameraDevice.setPreviewTextureAsync(Util.newSurfaceLayer(
+                    mCameraDisplayOrientation, mParameters, mActivity));
         } else {
             mCameraDevice.setDisplayOrientation(mDisplayOrientation);
             mCameraDevice.setPreviewDisplayAsync(mCameraSurfaceHolder);
