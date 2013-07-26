@@ -2358,14 +2358,14 @@ public class PhotoModule
                previewHeight = size.width;
             }
 
-            if ( ( mSurfaceTexture == null ) ||
+            if ( ( Util.mSurfaceTexture == null ) ||
                   (previewWidth != oldWidth) ||
                   (previewHeight != oldHeight) ) {
                 screenNail.setSize(previewWidth, previewHeight);
                 screenNail.enableAspectRatioClamping();
                 mActivity.notifyScreenNailChanged();
                 screenNail.acquireSurfaceTexture();
-                mSurfaceTexture = screenNail.getSurfaceTexture();
+                Util.mSurfaceTexture = screenNail.getSurfaceTexture();
             }
             mCameraDevice.setDisplayOrientation(mCameraDisplayOrientation);
             mCameraDevice.setPreviewTextureAsync(Util.newSurfaceLayer(
